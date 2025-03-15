@@ -328,7 +328,7 @@ table {
 
       </div>  
 
-      <button id="saveButton" >Update/Save values</button>
+      <button id="saveButton" onclick="saveTableData('Pilot1'), saveTableData('SubPilot1')">Update/Save values</button>
 
     </div>
 
@@ -660,7 +660,7 @@ table {
 
       </div>
 
-      <button id="saveButton" >Update/Save values</button>
+      <button id="saveButton">Update/Save values</button>
 
     </div>
 
@@ -798,6 +798,26 @@ function saveTableData(tableName) {
         tableData.push(rowData);
     }
 
+    console.log("Starte Speicheranfrage für Tabelle:", tableName);
+
+fetch("http://217.154.84.3/saveTable", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ tableName, tableData })
+})
+.then(response => {
+    console.log("Antwort erhalten, Status:", response.status);
+    if (!response.ok) {
+        throw new Error(`HTTP-Fehler! Status: ${response.status}`);
+    }
+    return response.json();
+})
+.then(data => console.log("Server-Antwort:", data))
+.catch(error => console.error("Fehler beim Speichern:", error));
+
+}
+
+    /*
     // Daten an den Server senden
     fetch("http://217.154.84.3/saveTable", {
         method: "POST",
@@ -813,6 +833,10 @@ function saveTableData(tableName) {
     .then(data => console.log("Server-Antwort:", data))
     .catch(error => console.error("Fehler beim Speichern:", error));
 }
+*/ 
+
+
+
 
 // Funktion zum Laden der Tabelle von Server
 function loadTableData(tableName) {
@@ -852,14 +876,14 @@ function loadTableData(tableName) {
 }
 
 
+// const currentDate = new Date();
 
 
-
-
+/*
 
 // Buttons zum Speichern der Daten (aufrufbar für jede Tabelle)
 document.getElementById("saveButton").onclick = function() {
-    saveTableData("Pilot1");
+    saveTableData('Pilot1');
     saveTableData("SubPilot1");
     //saveTableData("Gratton");
    // saveTableData("Raymond");
@@ -868,9 +892,12 @@ document.getElementById("saveButton").onclick = function() {
     location.reload();
   
 };
+*/ 
+
+
 
 window.onload = function() {
-    loadTableData("Pilot1");
+    loadTableData('Pilot1');
     loadTableData("SubPilot1");
     //loadTableData("Gratton");
     //loadTableData("Raymond");
@@ -879,6 +906,8 @@ window.onload = function() {
     const currentDate = new Date();
     
     setTimeout(() => {
+
+ 
 
 // const für auto-Email      
       const getLiLane1Pilot1 = document.getElementById("LiLane1Pilot1").innerText;
