@@ -776,6 +776,7 @@ function saveTableData(tableName) {
 */ 
 
 // SERVER STORAGE - Funktion zum Speichern der Tabellen auf dem Server
+// Funktion zum Speichern der Tabelle auf dem Server
 function saveTableData(tableName) {
     const table = document.getElementById("editableTable" + tableName);
     const rows = table.rows;
@@ -803,7 +804,12 @@ function saveTableData(tableName) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ tableName, tableData })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP-Fehler! Status: ${response.status}`);
+        }
+        return response.json();
+    })
     .then(data => console.log("Server-Antwort:", data))
     .catch(error => console.error("Fehler beim Speichern:", error));
 }
@@ -811,7 +817,12 @@ function saveTableData(tableName) {
 // Funktion zum Laden der Tabelle von Server
 function loadTableData(tableName) {
     fetch("http://217.154.84.3/loadTable?tableName=" + tableName)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP-Fehler! Status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(storedData => {
             const table = document.getElementById("editableTable" + tableName);
             if (storedData && storedData.length > 0) {
@@ -839,6 +850,7 @@ function loadTableData(tableName) {
         })
         .catch(error => console.error("Fehler beim Laden der Daten:", error));
 }
+
 
 
 
